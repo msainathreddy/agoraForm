@@ -1,0 +1,18 @@
+  input, textarea, select {
+    outline: 0;
+    border-top-style: hidden;
+    border-width: 0 0 2px;
+    /* border-color: blue; */
+  }
+
+  /* input:focus {
+    border-color: blue;
+  } */
+
+  textarea:focus {
+    border-color: blue;
+  }
+
+  .no-outline:focus {
+    outline: none;
+  }

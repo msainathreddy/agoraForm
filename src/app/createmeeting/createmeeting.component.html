@@ -1,0 +1,150 @@
+<form class="form-horizontal" [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Create Meeting</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-3" [ngClass]="{'has-error' : meetingForm.get('meetingTitle').errors && 
+                (meetingForm.get('meetingTitle').touched || meetingForm.get('meetingTitle').dirty)}">
+                    Meeting Title <input id="meetingTitle" type="text" class="form-control no-outline"
+                        formControlName="meetingTitle">
+                    <span class="help-block" *ngIf="meetingForm.get('meetingTitle').errors && 
+                        (meetingForm.get('meetingTitle').touched || meetingForm.get('meetingTitle').dirty)">
+                        <span *ngIf="meetingForm.get('meetingTitle').errors.required">
+                            Meeting Title is Required
+                        </span>
+                    </span>
+                </div>
+                
+                    <div class="col-sm-3">
+                        StartDate <br>
+                        <!-- <input id="date" type="text" class="form-control" 
+                        formControlName="meetingDate">  -->
+                        <p-calendar view="date" [showIcon]="true" inputId="icon" 
+                         formControlName="meetingDate"></p-calendar>
+                    </div>
+                
+                <div class="col-sm-3">
+                    Time <br>
+                    <!-- <input id="time" type="text" class="form-control" formControlName="meetingTime"> -->
+                    <p-calendar [timeOnly]="true" inputId="timeonly"  hourFormat="24" formControlName="meetingTime"></p-calendar>
+                </div>
+                <div class="col-sm-3" [ngClass]="{'has-error' : meetingForm.get('duration').errors && 
+                (meetingForm.get('duration').touched || meetingForm.get('duration').dirty)}">
+                    Duration (Minutes) <input id="duration" type="text" class="form-control" formControlName="duration">
+
+                    <span class="help-block" *ngIf="meetingForm.get('duration').errors && 
+                    (meetingForm.get('duration').touched || meetingForm.get('duration').dirty)">
+                        <span *ngIf="meetingForm.get('duration').errors.required">
+                            Duration is Required
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-8" [ngClass]="{'has-error' : meetingForm.get('location').errors && 
+                (meetingForm.get('location').touched || meetingForm.get('location').dirty)}">
+                    Location <input id="location" type="text" class="form-control" formControlName="location">
+                    <span class="help-block" *ngIf="meetingForm.get('location').errors && 
+                    (meetingForm.get('location').touched || meetingForm.get('location').dirty)">
+                        <span *ngIf="meetingForm.get('location').errors.required">
+                            Location is Required
+                        </span>
+                    </span>
+                </div>
+                <div class="col-sm-4">
+                    Frequency <select class="form-control" (change)="changeFrequency($event)"
+                        formControlName="frequency">
+                        <option value="">Choose Frequency</option>
+                        <option *ngFor="let fname of frequencyName" [ngValue]="fname">{{fname}}</option>
+                    </select>
+                    <div class="help-block" *ngIf="isSubmitted && frequency.errors?.required">
+                        <sup>*</sup>Please enter your Frequency
+                    </div>
+                    <!-- <span class="help-block" *ngIf="meetingForm.get('frequency').errors && 
+                      (meetingForm.get('frequency').touched || meetingForm.get('frequency').dirty)">
+                          <span *ngIf="meetingForm.get('frequency').errors.required">
+                              Please enter your frequency
+                          </span>
+                      </span> -->
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-8" [ngClass]="{'has-error' : meetingForm.get('meetingType').errors && 
+                (meetingForm.get('meetingType').touched || meetingForm.get('meetingType').dirty)}">
+                    Meeting Type <input id="meetingType" type="text" class="form-control" formControlName="meetingType">
+                    <span class="help-block" *ngIf="meetingForm.get('meetingType').errors && 
+                (meetingForm.get('meetingType').touched || meetingForm.get('meetingType').dirty)">
+                        <span *ngIf="meetingForm.get('meetingType').errors.required">
+                            Meeting Type is Required
+                        </span>
+                    </span>
+                </div>
+                <div class="col-sm-4">
+                    Default Approve Hours <input id="presenter" type="text" class="form-control"
+                        formControlName="defaultApproveHours">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="well">
+
+        <div class="form-group">
+            <a href="#" class="btn btn-info btn-lg" (click)="addAgendaButtonclick()">
+                <span class="glyphicon glyphicon-plus"></span> Plus
+            </a>
+        </div>
+        <div formArrayName="agenda" *ngFor="let age of meetingForm.get('agenda')['controls']; let i = index">
+            <div [formGroupName]="i">
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                Agenda Title <input [id]="'agendaTitle'+i" type="text" class="form-control"
+                                    formControlName="agendaTitle">
+                            </div>
+                            <div class="col-sm-4">
+                                <!-- Presenter <input id="presenter" type="text" class="form-control" formControlName="presenter" > -->
+                                Presenter<br>
+                                <p-autoComplete [suggestions]="filteredMails" formControlName="presenter"
+                                    (completeMethod)="filterMail($event)" field="Email" [multiple]="true">
+                                </p-autoComplete>
+                            </div>
+                            <div class="col-sm-4">
+                                Duration (Minutes) <input id="'durations'+i" type="text" class="form-control"
+                                    formControlName="durations">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                Notes <textarea id="'notes'+i" type="text" rows="3" class="form-control"
+                                    formControlName="notes"></textarea>
+                            </div>
+                            <div class="col-sm-4">
+                                Predefined Notes <textarea id="'predefinednotes'+i" type="text" rows="3"
+                                    class="form-control" formControlName="predefinedNotes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-primary" type="submit" [disabled]="meetingForm.invalid">Save</button>
+    </div>
+</form>
+
+Full Name Values: {{meetingForm.value | json}}
+
+<!-- <h5>Multiple</h5>
+<div class="form-group">
+    <div class="col-sm-4">
+        <p-autoComplete [(ngModel)]="selectedMails" [suggestions]="filteredMails" (completeMethod)="filterMail($event)"
+            field="Email" [multiple]="true">
+        </p-autoComplete>
+    </div>
+</div> -->

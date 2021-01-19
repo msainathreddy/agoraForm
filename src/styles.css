@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+.p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-input-token input{
+    width: 260px ;
+    line-height: 2 ;
+
+}
+
+/* ::ng-deep{
+    .p-calendar .p-inputtext {
+        line-height: 2;
+        width: 240px;
+ }
+} */
+
+.p-calendar-w-btn .p-inputtext {
+    line-height: 2 !important;
+    width: 240px !important;
+  }
+
+  .p-calendar .p-inputtext {
+    line-height: 2 !important;
+    width: 240px !important;
+  }
